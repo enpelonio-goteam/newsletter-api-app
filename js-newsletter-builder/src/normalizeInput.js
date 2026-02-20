@@ -1,4 +1,4 @@
-const { DEFAULTS } = require("./constants");
+const { DEFAULTS, SOCIAL_ICON_DEFAULTS } = require("./constants");
 const { asNonEmptyString, asPositiveIntString } = require("./utils");
 
 function normalizeSection(section, index) {
@@ -14,11 +14,51 @@ function normalizeSection(section, index) {
 }
 
 function normalizeSocialLink(link) {
+  const label = asNonEmptyString(link?.label);
+  const url = asNonEmptyString(link?.url);
+  const providedIconUrl = asNonEmptyString(link?.icon_url);
+
   return {
-    label: asNonEmptyString(link?.label),
-    url: asNonEmptyString(link?.url),
-    icon_url: asNonEmptyString(link?.icon_url),
+    label,
+    url,
+    icon_url: providedIconUrl || inferDefaultSocialIconUrl(label, url),
   };
+}
+
+function inferDefaultSocialIconUrl(label, url) {
+  const normalizedLabel = String(label || "").toLowerCase();
+  const normalizedUrl = String(url || "").toLowerCase();
+
+  if (!normalizedLabel && !normalizedUrl) {
+    return "";
+  }
+
+  if (
+    normalizedLabel.includes("facebook") ||
+    normalizedUrl.includes("facebook.com") ||
+    normalizedUrl.includes("fb.com")
+  ) {
+    return SOCIAL_ICON_DEFAULTS.facebook;
+  }
+
+  if (normalizedLabel.includes("instagram") || normalizedUrl.includes("instagram.com")) {
+    return SOCIAL_ICON_DEFAULTS.instagram;
+  }
+
+  if (normalizedLabel.includes("linkedin") || normalizedUrl.includes("linkedin.com")) {
+    return SOCIAL_ICON_DEFAULTS.linkedin;
+  }
+
+  if (
+    normalizedLabel.includes("website") ||
+    normalizedLabel.includes("web site") ||
+    normalizedLabel.includes("homepage") ||
+    normalizedLabel.includes("home page")
+  ) {
+    return SOCIAL_ICON_DEFAULTS.website;
+  }
+
+  return "";
 }
 
 function normalizeNewsletterInput(rawInput = {}) {

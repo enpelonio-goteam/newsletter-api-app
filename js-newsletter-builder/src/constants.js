@@ -25,7 +25,19 @@ const DEFAULTS = {
   footer_logo_width: "200",
 };
 
+const SOCIAL_ICON_DEFAULTS = {
+  facebook:
+    "https://athena-automation-files.s3.ap-southeast-2.amazonaws.com/facebook_icon.svg",
+  instagram:
+    "https://athena-automation-files.s3.ap-southeast-2.amazonaws.com/Instagram-Icon.png",
+  linkedin:
+    "https://athena-automation-files.s3.ap-southeast-2.amazonaws.com/linkedin_icon.svg",
+  website:
+    "https://athena-automation-files.s3.ap-southeast-2.amazonaws.com/website_icon.svg",
+};
+
 module.exports = {
   REQUIRED_TEMPLATES,
   DEFAULTS,
+  SOCIAL_ICON_DEFAULTS,
 };
