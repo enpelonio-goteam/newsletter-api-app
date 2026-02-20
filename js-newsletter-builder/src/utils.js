@@ -25,9 +25,31 @@ function replacePlaceholders(template, values) {
   return result;
 }
 
+function normalizeTypography(value) {
+  const input = asString(value);
+  if (!input) return input;
+
+  return input
+    .replace(/â€™/g, "'")
+    .replace(/â€˜/g, "'")
+    .replace(/â€œ/g, '"')
+    .replace(/â€\u009d/g, '"')
+    .replace(/â€”/g, "-")
+    .replace(/â€“/g, "-")
+    .replace(/â€¦/g, "...")
+    .replace(/\u2019/g, "'")
+    .replace(/\u2018/g, "'")
+    .replace(/\u201c/g, '"')
+    .replace(/\u201d/g, '"')
+    .replace(/\u2014/g, "-")
+    .replace(/\u2013/g, "-")
+    .replace(/\u2026/g, "...");
+}
+
 module.exports = {
   asString,
   asNonEmptyString,
   asPositiveIntString,
   replacePlaceholders,
+  normalizeTypography,
 };

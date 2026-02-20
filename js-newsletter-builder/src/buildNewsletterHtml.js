@@ -1,7 +1,7 @@
 const { normalizeNewsletterInput } = require("./normalizeInput");
 const { validateNewsletterInput } = require("./validateInput");
 const { loadTemplatesFromObject } = require("./templateLoader");
-const { asNonEmptyString } = require("./utils");
+const { asNonEmptyString, normalizeTypography } = require("./utils");
 const {
   createContainerStart,
   createContainerEnd,
@@ -25,6 +25,48 @@ function buildNewsletterHtml(rawInput, options = {}) {
 
   const templates = loadTemplatesFromObject(options.templates);
   const input = normalizeNewsletterInput(rawInput);
+
+  input.issue.issue_title = normalizeTypography(input.issue.issue_title);
+  input.issue.campaign_purpose = normalizeTypography(input.issue.campaign_purpose);
+  input.issue.target_audience = normalizeTypography(input.issue.target_audience);
+  input.issue.primary_cta_goal = normalizeTypography(input.issue.primary_cta_goal);
+  input.issue.style_direction = normalizeTypography(input.issue.style_direction);
+  input.issue.template_name = normalizeTypography(input.issue.template_name);
+
+  input.brand.brand_name = normalizeTypography(input.brand.brand_name);
+
+  input.assets.header_logo_alt = normalizeTypography(input.assets.header_logo_alt);
+  input.assets.footer_logo_alt = normalizeTypography(input.assets.footer_logo_alt);
+
+  input.header.newsletter_title = normalizeTypography(input.header.newsletter_title);
+  input.header.newsletter_subtitle = normalizeTypography(input.header.newsletter_subtitle);
+  input.header.preview_text = normalizeTypography(input.header.preview_text);
+
+  input.content.introduction = normalizeTypography(input.content.introduction);
+  input.content.sections = input.content.sections.map((section) => ({
+    ...section,
+    section_number: normalizeTypography(section.section_number),
+    title: normalizeTypography(section.title),
+    body: normalizeTypography(section.body),
+    image_alt: normalizeTypography(section.image_alt),
+    button_text: normalizeTypography(section.button_text),
+  }));
+
+  input.footer.closing_text = normalizeTypography(input.footer.closing_text);
+  input.footer.social_links = input.footer.social_links.map((link) => ({
+    ...link,
+    label: normalizeTypography(link.label),
+  }));
+
+  input.workflow_context.tone = normalizeTypography(input.workflow_context.tone);
+  input.workflow_context.constraints = normalizeTypography(
+    input.workflow_context.constraints
+  );
+  input.workflow_context.notes = normalizeTypography(input.workflow_context.notes);
+  input.workflow_context.references = normalizeTypography(
+    input.workflow_context.references
+  );
+
   const validationErrors = validateNewsletterInput(input);
   if (validationErrors.length > 0) {
     throw new Error(`Invalid newsletter input: ${validationErrors.join(" ")}`);
